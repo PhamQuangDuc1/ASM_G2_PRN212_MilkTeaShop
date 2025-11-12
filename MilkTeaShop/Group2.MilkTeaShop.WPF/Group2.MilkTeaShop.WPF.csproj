@@ -24,6 +24,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Group2.MilkTeaShop.BLL\Group2.MilkTeaShop.BLL.csproj">
+      <Private>True</Private>
+    </ProjectReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
