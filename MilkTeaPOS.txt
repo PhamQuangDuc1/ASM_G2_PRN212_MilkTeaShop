@@ -1,0 +1,210 @@
+-- =========================================
+-- 1️⃣ TẠO DATABASE
+-- =========================================
+CREATE DATABASE MilkTeaPOS;
+GO
+
+USE MilkTeaPOS;
+GO
+
+-- =========================================
+-- 2️⃣ TẠO BẢNG PHÂN QUYỀN / ĐĂNG NHẬP
+-- =========================================
+CREATE TABLE Role (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    RoleName NVARCHAR(50) NOT NULL UNIQUE
+);
+
+CREATE TABLE [User] (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Username NVARCHAR(100) NOT NULL UNIQUE,
+    PasswordHash NVARCHAR(255) NOT NULL,
+    FullName NVARCHAR(100),
+    RoleId INT NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    MustChangePassword BIT NOT NULL DEFAULT 1,
+    FOREIGN KEY (RoleId) REFERENCES Role(Id)
+);
+
+-- =========================================
+-- 3️⃣ DANH MỤC SẢN PHẨM
+-- =========================================
+CREATE TABLE Category (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    CategoryName NVARCHAR(100) NOT NULL
+);
+
+CREATE TABLE Product (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    ProductName NVARCHAR(200) NOT NULL,
+    ImagePath NVARCHAR(500),
+    CategoryId INT NOT NULL,
+    IsActive BIT NOT NULL DEFAULT 1,
+    FOREIGN KEY (CategoryId) REFERENCES Category(Id)
+);
+
+CREATE TABLE Size (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    SizeName NVARCHAR(20) NOT NULL UNIQUE
+);
+
+CREATE TABLE ProductPrice (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Price DECIMAL(18,2) NOT NULL DEFAULT 0,
+    ProductId INT NOT NULL,
+    SizeId INT NOT NULL,
+    FOREIGN KEY (ProductId) REFERENCES Product(Id),
+    FOREIGN KEY (SizeId) REFERENCES Size(Id),
+    CONSTRAINT UQ_Product_Size UNIQUE (ProductId, SizeId)
+);
+
+-- =========================================
+-- 4️⃣ THÀNH VIÊN / KHÁCH HÀNG
+-- =========================================
+CREATE TABLE MemberTier (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    TierName NVARCHAR(50) NOT NULL UNIQUE,
+    MinPoints INT NOT NULL DEFAULT 0,
+    DiscountPercentage DECIMAL(5,2) NOT NULL DEFAULT 0
+);
+
+CREATE TABLE Customer (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    PhoneNumber NVARCHAR(20) UNIQUE,
+    FullName NVARCHAR(100),
+    Points INT DEFAULT 0,
+    Birthday DATE NULL,
+    MemberTierId INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (MemberTierId) REFERENCES MemberTier(Id)
+);
+
+-- =========================================
+-- 5️⃣ HÓA ĐƠN / BÁN HÀNG
+-- =========================================
+CREATE TABLE [Order] (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    OrderDate DATETIME NOT NULL DEFAULT GETDATE(),
+    TotalPrice DECIMAL(18,2) NOT NULL,
+    DiscountAmount DECIMAL(18,2) DEFAULT 0,
+    FinalPrice DECIMAL(18,2) NOT NULL,
+    PaymentMethod NVARCHAR(50),
+    Status NVARCHAR(50) NOT NULL,
+    OrderSource NVARCHAR(50) NOT NULL DEFAULT N'Tại quầy',
+    ExternalOrderId NVARCHAR(100) NULL,
+    UserId INT NOT NULL,
+    CustomerId INT NULL,
+    FOREIGN KEY (UserId) REFERENCES [User](Id),
+    FOREIGN KEY (CustomerId) REFERENCES Customer(Id)
+);
+
+CREATE TABLE OrderDetail (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    OrderId INT NOT NULL,
+    ProductId INT NOT NULL,
+    Quantity INT NOT NULL DEFAULT 1,
+    SugarLevel NVARCHAR(20),
+    IceLevel NVARCHAR(20),
+    UnitPrice DECIMAL(18,2) NOT NULL,
+    Notes NVARCHAR(255),
+    FOREIGN KEY (OrderId) REFERENCES [Order](Id),
+    FOREIGN KEY (ProductId) REFERENCES Product(Id)
+);
+
+CREATE TABLE OrderDetailTopping (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    OrderDetailId INT NOT NULL,
+    ToppingId INT NOT NULL,
+    ToppingPrice DECIMAL(18,2) NOT NULL,
+    Quantity INT NOT NULL DEFAULT 1,
+    FOREIGN KEY (OrderDetailId) REFERENCES OrderDetail(Id),
+    FOREIGN KEY (ToppingId) REFERENCES Product(Id)
+);
+
+-- =========================================
+-- 6️⃣ VOUCHER / KHUYẾN MÃI
+-- =========================================
+CREATE TABLE Voucher (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    VoucherName NVARCHAR(100) NOT NULL,
+    VoucherProductId INT NULL,
+    FOREIGN KEY (VoucherProductId) REFERENCES Product(Id)
+);
+
+CREATE TABLE CustomerVoucher (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    CustomerId INT NOT NULL,
+    VoucherId INT NOT NULL,
+    Status NVARCHAR(20) NOT NULL DEFAULT N'Chưa dùng',
+    ExpiryDate DATE NULL,
+    UsedOrderId INT NULL,
+    FOREIGN KEY (CustomerId) REFERENCES Customer(Id),
+    FOREIGN KEY (VoucherId) REFERENCES Voucher(Id),
+    FOREIGN KEY (UsedOrderId) REFERENCES [Order](Id)
+);
+
+-- =========================================
+-- 7️⃣ SEED DỮ LIỆU MẪU
+-- =========================================
+INSERT INTO Role (RoleName) VALUES 
+(N'Admin'), (N'Thu ngân');
+
+INSERT INTO [User] (Username, PasswordHash, FullName, RoleId, IsActive, MustChangePassword)
+VALUES
+('admin', '123456hashed', N'Nguyễn Thị Quản Lý', 1, 1, 0),
+('cashier01', '123456hashed', N'Trần Văn Thu Ngân', 2, 1, 1);
+
+INSERT INTO Category (CategoryName) VALUES 
+(N'Trà sữa'), (N'Topping'), (N'Đồ ăn kèm'), (N'Món khác');
+
+INSERT INTO Product (ProductName, ImagePath, CategoryId, IsActive) VALUES
+(N'Trà sữa trân châu đường đen', N'images/trasua_duongden.jpg', 1, 1),
+(N'Trà sữa matcha', N'images/matcha.jpg', 1, 1),
+(N'Hồng trà sữa', N'images/hongtra.jpg', 1, 1),
+(N'Trân châu trắng', N'images/topping_tranchautrang.jpg', 2, 1),
+(N'Pudding trứng', N'images/topping_pudding.jpg', 2, 1),
+(N'Thạch dừa', N'images/topping_thachdau.jpg', 2, 1),
+(N'Bánh Flan', N'images/banhflan.jpg', 3, 1),
+(N'Bánh mochi', N'images/mochi.jpg', 3, 1);
+
+INSERT INTO Size (SizeName) VALUES ('S'), ('M'), ('L');
+
+INSERT INTO ProductPrice (ProductId, SizeId, Price) VALUES
+(1, 1, 25000), (1, 2, 30000), (1, 3, 35000),
+(2, 1, 27000), (2, 2, 32000), (2, 3, 37000),
+(3, 1, 23000), (3, 2, 28000), (3, 3, 33000);
+
+INSERT INTO MemberTier (TierName, MinPoints, DiscountPercentage)
+VALUES
+(N'Đồng', 0, 0), (N'Bạc', 501, 5), (N'Vàng', 2001, 8), (N'Kim Cương', 5001, 12);
+
+INSERT INTO Customer (PhoneNumber, FullName, Points, Birthday, MemberTierId)
+VALUES
+('0905123456', N'Nguyễn Hồng Nhung', 1200, '2000-05-20', 2),
+('0905234567', N'Lê Minh Quân', 3200, '1999-03-15', 3),
+('0905345678', N'Phạm Ngọc Anh', 5200, '1998-07-07', 4),
+('0905456789', N'Trần Bảo Trâm', 200, '2002-11-22', 1);
+
+INSERT INTO Voucher (VoucherName, VoucherProductId)
+VALUES
+(N'Miễn phí 1 ly size M bất kỳ', NULL),
+(N'Giảm 30% giá topping', NULL),
+(N'Giảm 10% cho đơn từ 100k', NULL);
+
+INSERT INTO CustomerVoucher (CustomerId, VoucherId, Status, ExpiryDate)
+VALUES
+(1, 1, N'Chưa dùng', '2025-12-31'),
+(2, 2, N'Chưa dùng', '2025-12-31'),
+(3, 3, N'Đã dùng', '2025-10-15');
+
+INSERT INTO [Order] (OrderDate, TotalPrice, DiscountAmount, FinalPrice, PaymentMethod, Status, OrderSource, UserId, CustomerId)
+VALUES
+(GETDATE(), 65000, 5000, 60000, N'Tiền mặt', N'Hoàn thành', N'Tại quầy', 2, 1);
+
+INSERT INTO OrderDetail (OrderId, ProductId, Quantity, SugarLevel, IceLevel, UnitPrice, Notes)
+VALUES
+(1, 1, 1, N'70%', N'50%', 30000, N'Đá để riêng');
+
+INSERT INTO OrderDetailTopping (OrderDetailId, ToppingId, ToppingPrice, Quantity)
+VALUES
+(1, 4, 7000, 1),
+(1, 5, 8000, 1);
