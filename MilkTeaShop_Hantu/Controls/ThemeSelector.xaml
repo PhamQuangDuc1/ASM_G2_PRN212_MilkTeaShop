@@ -1,0 +1,25 @@
+<UserControl x:Class="MilkTeaShop_Hantu.Controls.ThemeSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Border Style="{StaticResource CardStyle}" Padding="10">
+        <StackPanel Orientation="Horizontal">
+            <TextBlock Text="🎨 Theme:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <ItemsControl x:Name="ThemeButtons">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <StackPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Button Content="{Binding DisplayName}" 
+                               Background="{Binding PreviewColor}"
+                               Width="80" Height="30" Margin="2"
+                               Click="ThemeButton_Click"
+                               Tag="{Binding Theme}"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+    </Border>
+</UserControl>

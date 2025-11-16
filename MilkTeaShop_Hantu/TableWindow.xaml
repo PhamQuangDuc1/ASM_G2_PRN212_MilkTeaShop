@@ -1,0 +1,72 @@
+﻿<Window x:Class="MilkTeaShop_Hantu.TableWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MilkTeaShop_Hantu"
+        mc:Ignorable="d"
+        Title="Blue Sky Tea Milk - Chọn Bàn" Height="650" Width="800"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource PrimaryBackgroundBrush}">
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Logo và Theme Selector Panel -->
+        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Margin="0,0,0,15" Padding="15">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Logo Blue Sky Tea Milk -->
+                <Border Grid.Column="0" Background="White" CornerRadius="8" Padding="8" Margin="0,0,15,0">
+                    <Border.Effect>
+                        <DropShadowEffect Color="Black" Direction="320" ShadowDepth="2" Opacity="0.15" BlurRadius="4"/>
+                    </Border.Effect>
+                    <Image x:Name="LogoImage" 
+                           Width="120" Height="60" 
+                           Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+                
+                <!-- Welcome Text -->
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <TextBlock Text="🏪 HỆ THỐNG QUẢN LÝ BÀN" FontSize="20" FontWeight="Bold" 
+                              HorizontalAlignment="Center" Foreground="#4A5568"/>
+                    <TextBlock Text="Chào mừng đến với Blue Sky Tea Milk" FontSize="14" 
+                              HorizontalAlignment="Center" Foreground="#718096" Margin="0,5,0,0"/>
+                </StackPanel>
+
+                <!-- Theme Selector -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                    <TextBlock Text="🎨 Chọn Theme:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <ComboBox x:Name="ThemeSelector" Width="150" Height="35" 
+                             SelectionChanged="ThemeSelector_SelectionChanged">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding}" FontWeight="SemiBold"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content -->
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}">
+            <StackPanel>
+                <TextBlock Text="📋 DANH SÁCH BÀN" FontSize="24" FontWeight="Bold" 
+                          HorizontalAlignment="Center" Margin="0,0,0,20" Foreground="#2D3748"/>
+                
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" 
+                             Height="480">
+                    <WrapPanel x:Name="TablePanel" HorizontalAlignment="Center" />
+                </ScrollViewer>
+            </StackPanel>
+        </Border>
+    </Grid>
+</Window>

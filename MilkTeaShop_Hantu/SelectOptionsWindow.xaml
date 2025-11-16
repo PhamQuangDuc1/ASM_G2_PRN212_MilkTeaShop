@@ -1,0 +1,150 @@
+﻿<Window x:Class="MilkTeaShop_Hantu.SelectOptionsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="Chọn tùy chọn" Height="650" Width="450" 
+        WindowStartupLocation="CenterOwner"
+        Background="{DynamicResource PrimaryBackgroundBrush}"
+        Loaded="Window_Loaded">
+
+    <Window.Resources>
+        <!-- Style cho button với góc bo tròn -->
+        <Style x:Key="RoundedButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="6"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Content="{TemplateBinding Content}"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Opacity" Value="0.6"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="15">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock x:Name="ProductNameText" FontSize="20" FontWeight="Bold" Margin="0 0 0 15" 
+                          HorizontalAlignment="Center" Foreground="#2D3748"/>
+
+                <!-- Size -->
+                <Border Background="White" CornerRadius="8" Padding="15" Margin="0 0 0 10" 
+                       BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="📏 Chọn Size:" FontSize="14" FontWeight="SemiBold" Margin="0 0 0 8" 
+                                  Foreground="#4A5568"/>
+                        <ComboBox x:Name="SizeComboBox" DisplayMemberPath="SizeName" Height="35"
+                                  SelectionChanged="SizeComboBox_SelectionChanged" FontSize="13"/>
+
+                        <!-- Hiển thị giá -->
+                        <TextBlock x:Name="PriceText" FontSize="16" FontWeight="Bold" Margin="0 10 0 0" 
+                                  Foreground="#38A169" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Topping Section -->
+                <Border x:Name="ToppingPanel" Background="White" CornerRadius="8" Padding="15" Margin="0 10 0 0" 
+                       BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="🍯 Chọn Topping:" FontSize="14" FontWeight="SemiBold" Margin="0 0 0 10" 
+                                  Foreground="#4A5568"/>
+
+                        <!-- Container cho topping items -->
+                        <StackPanel x:Name="ToppingItemsPanel"/>
+
+                        <!-- Total topping price -->
+                        <Border Background="#F7FAFC" CornerRadius="6" Padding="10" Margin="0 10 0 0">
+                            <TextBlock x:Name="ToppingTotalText" Text="Tổng topping: 0 VNĐ" 
+                                      FontWeight="SemiBold" HorizontalAlignment="Center" 
+                                      Foreground="#4A5568"/>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Sugar & Ice Section -->
+                <Border x:Name="SugarIcePanel" Background="White" CornerRadius="8" Padding="15" Margin="0 10 0 0" 
+                       BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="🧊 Tùy chỉnh:" FontSize="14" FontWeight="SemiBold" Margin="0 0 0 10" 
+                                  Foreground="#4A5568"/>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="10"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <StackPanel Grid.Column="0">
+                                <TextBlock Text="Đường:" FontSize="12" Margin="0 0 0 5"/>
+                                <ComboBox x:Name="SugarComboBox" Height="40">
+                                    <ComboBoxItem Content="0%"/>
+                                    <ComboBoxItem Content="30%"/>
+                                    <ComboBoxItem Content="50%"/>
+                                    <ComboBoxItem Content="70%"/>
+                                    <ComboBoxItem Content="100%"/>
+                                </ComboBox>
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="2">
+                                <TextBlock Text="Đá:" FontSize="12" Margin="0 0 0 5"/>
+                                <ComboBox x:Name="IceComboBox" Height="40">
+                                    <ComboBoxItem Content="0%"/>
+                                    <ComboBoxItem Content="30%"/>
+                                    <ComboBoxItem Content="50%"/>
+                                    <ComboBoxItem Content="70%"/>
+                                    <ComboBoxItem Content="100%"/>
+                                </ComboBox>
+                            </StackPanel>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <!-- Notes Section -->
+                <Border Background="White" CornerRadius="8" Padding="15" Margin="0 10 0 0" 
+                       BorderBrush="#E2E8F0" BorderThickness="1">
+                    <StackPanel>
+                        <TextBlock Text="📝 Ghi chú:" FontSize="14" FontWeight="SemiBold" Margin="0 0 0 8" 
+                                  Foreground="#4A5568"/>
+                        <TextBox x:Name="NotesBox" Height="60" TextWrapping="Wrap" AcceptsReturn="True" 
+                                VerticalScrollBarVisibility="Auto" Padding="8"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Action Buttons -->
+                <Grid Margin="0 15 0 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="10"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Content="❌ Hủy" Height="45" Background="#E53E3E" 
+                           Foreground="White" FontWeight="Bold" Click="Cancel_Click" 
+                           Style="{StaticResource RoundedButtonStyle}"/>
+
+                    <Button Grid.Column="1" Content="✅ Xác nhận" Height="45" Background="#38A169" 
+                           Foreground="White" FontWeight="Bold" Click="ConfirmButton_Click" 
+                           Style="{StaticResource RoundedButtonStyle}" Grid.ColumnSpan="2" Margin="10,0,0,0" VerticalAlignment="Bottom"/>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>
