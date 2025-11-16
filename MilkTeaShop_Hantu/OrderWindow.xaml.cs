@@ -542,5 +542,13 @@ namespace MilkTeaShop_Hantu
 
         private void SearchButton_Click(object sender, RoutedEventArgs e)
             => SearchBox_TextChanged(sender, new TextChangedEventArgs(e.RoutedEvent, UndoAction.None));
+
+        private void productView_Click(object sender, RoutedEventArgs e)
+        {
+            ProductView productView = new ProductView();
+            productView.Show();
+            this.Hide();
+
+        }
     }
 }

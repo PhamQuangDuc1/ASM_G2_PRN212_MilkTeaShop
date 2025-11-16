@@ -28,10 +28,10 @@
                        Width="160" Height="80" 
                        Stretch="Uniform" HorizontalAlignment="Center"/>
             </Border>
-            
+
             <TextBlock Text="📋 Danh mục" FontSize="18" FontWeight="Bold" Margin="0,0,0,10" 
                       Foreground="#2D3748"/>
-            
+
             <!-- Category Container với ScrollViewer -->
             <Border Background="#F7FAFC" CornerRadius="8" BorderBrush="#E2E8F0" BorderThickness="1" Padding="5">
                 <ScrollViewer VerticalScrollBarVisibility="Auto" Height="450">
@@ -90,6 +90,7 @@
                             Background="#FF607D8B" Foreground="White" FontWeight="Bold"
                             Click="NextPageButton_Click" Margin="5,0,0,0"/>
                 </StackPanel>
+                <Button Grid.Column="1" x:Name="productView" Content="Product view" HorizontalAlignment="Left" Height="50" Margin="30,0,0,0" VerticalAlignment="Center" Width="121" Click="productView_Click"/>
             </Grid>
         </Grid>
 

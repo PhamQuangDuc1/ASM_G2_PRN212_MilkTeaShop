@@ -167,5 +167,10 @@ namespace MilkTeaShop_Hantu
                     break;
             }
         }
+
+        private void Productutton_Click(object sender, RoutedEventArgs e)
+        {
+            ProductView productView = new ProductView();
+        }
     }
 }

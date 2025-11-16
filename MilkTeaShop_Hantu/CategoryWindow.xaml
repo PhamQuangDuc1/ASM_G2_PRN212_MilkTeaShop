@@ -1,0 +1,24 @@
+﻿<Window x:Class="MilkTeaShop_Hantu.CategoryWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MilkTeaShop_Hantu"
+        mc:Ignorable="d"
+        Title="CategoryWindow" Height="450" Width="800" Loaded="Window_Loaded"
+         WindowStartupLocation="CenterScreen">
+    <Grid>
+
+        <DataGrid x:Name="CategoryDataGrid" HorizontalAlignment="Left" Height="246" Margin="69,59,0,0" VerticalAlignment="Top" Width="644" AutoGenerateColumns="False" >
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Width="40" Binding="{Binding Id}"/>
+                <DataGridTextColumn Header="Name" Width="*" Binding="{Binding CategoryName}"/>
+            </DataGrid.Columns>
+        </DataGrid>
+        <Button x:Name="Createbutton" Content="Create" HorizontalAlignment="Left" Height="38" Margin="10,335,0,0" VerticalAlignment="Top" Width="121" Click="Createbutton_Click"/>
+        <Button x:Name="Updatebutton" Content="Update" HorizontalAlignment="Left" Height="38" Margin="182,335,0,0" VerticalAlignment="Top" Width="121" Click="Button_Click_1" />
+        <Button x:Name="Deletebutton" Content="Delete" HorizontalAlignment="Left" Height="38" Margin="361,335,0,0" VerticalAlignment="Top" Width="121" Click="Deletebutton_Click"/>
+        <Button x:Name="Backbutton" Content="Back Home" HorizontalAlignment="Left" Height="38" Margin="527,335,0,0" VerticalAlignment="Top" Width="121" Click="Backbutton_Click"/>
+
+    </Grid>
+</Window>
